@@ -2,9 +2,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import './Upload.css'
+import Loading from '../Loading/Loading';
 
 function UploadForm() {
-	const { register, handleSubmit, setError, formState: { errors } } = useForm(
+	const { register, handleSubmit, formState: { errors } } = useForm(
 		{
 			defaultValues: {
 				logoWidth: 1200,
@@ -84,6 +85,7 @@ function UploadForm() {
 				<button type="submit">Upload and Process</button>
 			</form>
 			{/* Render download link if available */}
+			{loading && <div style={{ textAlign: 'center' }}><Loading /></div>}
 			{downloadLink && !loading && (
 				<div>
 					<p>Processing completed! Download the ZIP file:</p>
