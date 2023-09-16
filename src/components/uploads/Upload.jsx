@@ -32,7 +32,7 @@ function UploadForm() {
 		formData.append('quality', data.quality);
 
 		try {
-			const response = await axios.post('http://localhost:8000/process', formData);
+			const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/process`, formData);
 			setDownloadLink(response.data.downloadLink);
 		} catch (error) {
 			console.error('Error uploading the Excel file:', error);
