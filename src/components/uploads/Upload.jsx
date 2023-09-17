@@ -2,7 +2,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import './Upload.css'
-import Loading from '../Loading/Loading';
 
 function UploadForm() {
 	const { register, handleSubmit, formState: { errors } } = useForm(
@@ -15,13 +14,11 @@ function UploadForm() {
 				quality: 50,
 			}
 		});
-	const [downloadLink, setDownloadLink] = React.useState(null);
-	const [loading, setLoading] = React.useState(false);
+	const [message, setMessage] = React.useState(null);
 
 	const onSubmit = async (data) => {
 		// Reset download link
-		setDownloadLink(null);
-		setLoading(true);
+		setMessage(null);
 		const formData = new FormData();
 		formData.append('excelFile', data.excelFile[0]);
 		formData.append('logoUrl', data.logoUrl);
@@ -30,15 +27,14 @@ function UploadForm() {
 		formData.append('imageWidth', data.imageWidth);
 		formData.append('imageHeight', data.imageHeight);
 		formData.append('quality', data.quality);
-
+		formData.append('idTelegram', data.idTelegram);
 		try {
-			const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/process`, formData);
-			setDownloadLink(response.data.downloadLink);
+			await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/process`, formData);
 		} catch (error) {
 			console.error('Error uploading the Excel file:', error);
 		}
 		finally {
-			setLoading(false);
+			setMessage('Processing the images, waiting and check telegram message...');
 		}
 	};
 
@@ -55,6 +51,11 @@ function UploadForm() {
 					<label htmlFor="logoUrl">Logo URL:</label>
 					<input type="text" id="logoUrl" {...register('logoUrl', { required: true })} />
 					{errors.logoUrl && <p className='error'>This field is required</p>}
+				</div>
+				<div>
+					<label htmlFor="idTelegram">Id Telegram:</label>
+					<input type="text" id="idTelegram" {...register('idTelegram', { required: true })} />
+					{errors.idTelegram && <p className='error'>Require field</p>}
 				</div>
 				<div>
 					<label htmlFor="logoWidth">Logo Width:</label>
@@ -83,15 +84,8 @@ function UploadForm() {
 				</div>
 
 				<button type="submit">Upload and Process</button>
+				{message && <p>{message}</p>}
 			</form>
-			{/* Render download link if available */}
-			{loading && <div style={{ textAlign: 'center' }}><Loading /></div>}
-			{downloadLink && !loading && (
-				<div>
-					<p>Processing completed! Download the ZIP file:</p>
-					<a href={downloadLink} download>Download ZIP</a>
-				</div>
-			)}
 		</div>
 	);
 }
