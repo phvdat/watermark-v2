@@ -28,6 +28,7 @@ function UploadForm() {
 		formData.append('imageHeight', data.imageHeight);
 		formData.append('quality', data.quality);
 		formData.append('idTelegram', data.idTelegram);
+		formData.append('shopName', data.shopName);
 		try {
 			await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/process`, formData);
 		} catch (error) {
@@ -56,6 +57,11 @@ function UploadForm() {
 					<label htmlFor="idTelegram">Id Telegram:</label>
 					<input type="text" id="idTelegram" {...register('idTelegram', { required: true })} />
 					{errors.idTelegram && <p className='error'>Require field</p>}
+				</div>
+				<div>
+					<label htmlFor="shopName">Shop name:</label>
+					<input type="text" id="shopName" {...register('shopName', { required: true })} />
+					{errors.shopName && <p className='error'>Require field</p>}
 				</div>
 				<div>
 					<label htmlFor="logoWidth">Logo Width:</label>
