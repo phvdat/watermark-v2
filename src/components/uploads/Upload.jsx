@@ -89,7 +89,7 @@ function UploadForm() {
 					{errors.quality && <p className='error'>Quality height must be a positive number</p>}
 				</div>
 
-				<button type="submit">Upload and Process</button>
+				<button type="submit" disabled={message}>Upload and Process</button>
 				{message && <p>{message}</p>}
 			</form>
 		</div>
