@@ -1,18 +1,25 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import { useLocalStorage } from 'usehooks-ts'
 import './Upload.css'
 
 function UploadForm() {
+
+	const [formValueLocal, setFormValueLocal] = useLocalStorage('formValueLocal', JSON.stringify({
+		logoUrl: '',
+		logoWidth: 1000,
+		logoHeight: 1000,
+		imageWidth: 1000,
+		imageHeight: 1000,
+		quality: 50,
+		idTelegram: '',
+		shopName: ''
+	}))
+
 	const { register, handleSubmit, formState: { errors } } = useForm(
 		{
-			defaultValues: {
-				logoWidth: 1200,
-				logoHeight: 1200,
-				imageWidth: 1200,
-				imageHeight: 1200,
-				quality: 50,
-			}
+			defaultValues: JSON.parse(formValueLocal)
 		});
 	const [message, setMessage] = React.useState(null);
 
@@ -31,6 +38,8 @@ function UploadForm() {
 		formData.append('shopName', data.shopName);
 		try {
 			await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/process`, formData);
+			const { excelFile, ...formLocal } = data
+			setFormValueLocal(JSON.stringify(formLocal))
 		} catch (error) {
 			console.error('Error uploading the Excel file:', error);
 		}
